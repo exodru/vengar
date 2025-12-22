@@ -1,0 +1,24 @@
+# --- Build Artifacts ---
+[Bb]in/
+[Oo]bj/
+
+# --- JetBrains (Rider/.idea) ---
+.idea/
+*.sln.DotSettings.user
+
+# --- Visual Studio ---
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- Avalonia / .NET Specific ---
+*.orig
+*.swp
+.home
+.local
+.cache
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db

@@ -1,0 +1,139 @@
+<UserControl
+    x:Class="vengar.Views.DnsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:vengar.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:vengar.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:DnsViewModel"
+    mc:Ignorable="d">
+
+
+    <Design.DataContext>
+        <vm:DnsViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <conv:DnsTypeTooltipConverter x:Key="DnsTypeTooltipConverter" />
+        <conv:DnsRecordTypeColorConverter x:Key="DnsRecordTypeColorConverter" />
+    </UserControl.Resources>
+
+    <Grid Margin="10" RowDefinitions="Auto,*, Auto">
+        <StackPanel
+            Margin="0,0,0,10"
+            Orientation="Horizontal"
+            Spacing="10">
+            <TextBox
+                Width="300"
+                VerticalContentAlignment="Center"
+                Text="{Binding Hostname}"
+                Watermark="Enter domain (example.com)" />
+            <Button
+                Classes="ActionButton"
+                Command="{Binding LookupCommand}"
+                Content="Lookup"
+                IsDefault="True" />
+        </StackPanel>
+
+        <dg:DataGrid
+            x:Name="DnsDataGrid"
+            Grid.Row="1"
+            VerticalAlignment="Stretch"
+            AutoGenerateColumns="False"
+            BorderBrush="WhiteSmoke"
+            BorderThickness="1"
+            GridLinesVisibility="All"
+            IsReadOnly="True"
+            ItemsSource="{Binding Records}"
+            SelectionMode="Extended">
+
+            <dg:DataGrid.Columns>
+
+                <!--  TYPE (with tooltip explanation + color)  -->
+                <dg:DataGridTemplateColumn Width="80" Header="Type">
+                    <dg:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border
+                                Padding="5"
+                                Background="{Binding Type, Converter={StaticResource DnsRecordTypeColorConverter}}"
+                                CornerRadius="2">
+                                <TextBlock
+                                    Foreground="White"
+                                    Text="{Binding Type}"
+                                    ToolTip.Tip="{Binding Type, Converter={StaticResource DnsTypeTooltipConverter}}" />
+                            </Border>
+                        </DataTemplate>
+                    </dg:DataGridTemplateColumn.CellTemplate>
+                </dg:DataGridTemplateColumn>
+
+                <!--  NAME  -->
+                <dg:DataGridTemplateColumn Width="*" Header="Name">
+                    <dg:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Padding="5">
+                                <TextBlock Text="{Binding Name}" />
+                            </Border>
+                        </DataTemplate>
+                    </dg:DataGridTemplateColumn.CellTemplate>
+                </dg:DataGridTemplateColumn>
+
+                <!--  VALUE  -->
+                <dg:DataGridTemplateColumn Width="*" Header="Value">
+                    <dg:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Padding="5">
+                                <TextBlock Text="{Binding Value}" />
+                            </Border>
+                        </DataTemplate>
+                    </dg:DataGridTemplateColumn.CellTemplate>
+                </dg:DataGridTemplateColumn>
+
+                <!--  TTL  -->
+                <dg:DataGridTemplateColumn Width="80" Header="TTL">
+                    <dg:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border Padding="5">
+                                <TextBlock Text="{Binding Ttl}" />
+                            </Border>
+                        </DataTemplate>
+                    </dg:DataGridTemplateColumn.CellTemplate>
+                </dg:DataGridTemplateColumn>
+
+            </dg:DataGrid.Columns>
+
+            <dg:DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Click="CopyType_OnClick" Header="Copy Type" />
+                    <MenuItem Click="CopyName_OnClick" Header="Copy Name" />
+                    <MenuItem Click="CopyValue_OnClick" Header="Copy Value" />
+                    <MenuItem Click="CopyTtl_OnClick" Header="Copy TTL" />
+                </ContextMenu>
+            </dg:DataGrid.ContextMenu>
+
+        </dg:DataGrid>
+        <StackPanel
+            Grid.Row="2"
+            Margin="0,10,0,0"
+            Orientation="Horizontal"
+            Spacing="10">
+            <Button
+                Classes="ActionButton"
+                Command="{Binding SaveLogsCommand}"
+                CommandParameter="{Binding $self}"
+                Content="Save Logs" />
+            <Button
+                Padding="10"
+                BorderBrush="WhiteSmoke"
+                BorderThickness="1"
+                Command="{Binding ClearLogsCommand}"
+                CommandParameter="{Binding $self}"
+                Content="Clear Logs" />
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>

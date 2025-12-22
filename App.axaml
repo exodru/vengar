@@ -1,0 +1,38 @@
+<Application
+    x:Class="vengar.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:vengar"
+    x:CompileBindings="True"
+    RequestedThemeVariant="Dark">
+    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+
+    <Application.Resources>
+        <FontFamily x:Key="RobotoFont">Roboto</FontFamily>
+        <FontFamily x:Key="ScienceGothicFont">Science Gothic</FontFamily>
+        <SolidColorBrush x:Key="PrimaryBackground">#90192021</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryTopLayerBackground">#60000000</SolidColorBrush>
+        <SolidColorBrush x:Key="Accent">#f89a1a</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryText">#ffffff</SolidColorBrush>
+        <SolidColorBrush x:Key="PrimaryTextHoverContrast">#101010</SolidColorBrush>
+        <LinearGradientBrush x:Key="ButtonGradient" StartPoint="0%, 0%" EndPoint="100%, 0%">
+            <GradientStop Offset="0" Color="#f07e24" />
+            <GradientStop Offset="1" Color="#f9ae14" />
+        </LinearGradientBrush>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Light" Accent="#f07e24" />
+                <ColorPaletteResources x:Key="Dark" Accent="#f07e24" />
+            </FluentTheme.Palettes>
+        </FluentTheme>
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+        <StyleInclude Source="Styles/AppDefaultStyles.axaml" />
+    </Application.Styles>
+</Application>

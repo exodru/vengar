@@ -1,0 +1,136 @@
+<UserControl
+    x:Class="vengar.Views.PortScannerView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:vengar.ViewModels"
+    xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+    xmlns:vm="using:vengar.ViewModels"
+    x:DataType="vm:PortScannerViewModel">
+
+    <Design.DataContext>
+        <vm:PortScannerViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <conv:PortStatusColorConverter x:Key="PortStatusColorConverter" />
+    </UserControl.Resources>
+
+
+    <Grid Margin="10" RowDefinitions="Auto,Auto,*,Auto">
+
+        <!--  INPUTS  -->
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBox
+                Width="220"
+                VerticalContentAlignment="Center"
+                Text="{Binding Host}"
+                Watermark="IP or Host" />
+            <ComboBox
+                Width="200"
+                Height="40"
+                ItemsSource="{Binding Presets}"
+                SelectedItem="{Binding SelectedPreset}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button
+                Classes="ActionButton"
+                Command="{Binding ScanCommand}"
+                Content="Scan"
+                IsDefault="True" />
+        </StackPanel>
+
+        <!--  PORTS  -->
+        <TextBox
+            Grid.Row="1"
+            Margin="0,10,0,10"
+            Padding="10"
+            Text="{Binding PortsText}"
+            Watermark="Ports (comma-separated)" />
+
+        <!--  RESULTS  -->
+        <dg:DataGrid
+            Grid.Row="2"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="All"
+            IsReadOnly="True"
+            ItemsSource="{Binding Results}">
+
+            <dg:DataGrid.Columns>
+                <dg:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Title}"
+                    Header="Title" />
+                <dg:DataGridTextColumn
+                    Width="80"
+                    Binding="{Binding Port}"
+                    Header="Port" />
+                <dg:DataGridTemplateColumn Width="120" Header="Status">
+                    <dg:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border
+                                Padding="5"
+                                Background="{Binding Status, Converter={StaticResource PortStatusColorConverter}}"
+                                CornerRadius="3">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    FontWeight="SemiBold"
+                                    Foreground="Black"
+                                    Text="{Binding Status}" />
+                            </Border>
+                        </DataTemplate>
+                    </dg:DataGridTemplateColumn.CellTemplate>
+                </dg:DataGridTemplateColumn>
+            </dg:DataGrid.Columns>
+        </dg:DataGrid>
+
+        <!--  LOGS  -->
+        <Grid
+            Grid.Row="3"
+            Margin="0,10,0,0"
+            ColumnDefinitions="Auto,*">
+
+            <!--  Buttons  -->
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button
+                    Padding="10"
+                    BorderBrush="{StaticResource Accent}"
+                    BorderThickness="1"
+                    Command="{Binding SaveLogsCommand}"
+                    CommandParameter="{Binding $self}"
+                    Foreground="{StaticResource Accent}"
+                    IsEnabled="{Binding !IsScanning}">
+                    Save Logs
+                </Button>
+
+                <Button
+                    Padding="10"
+                    BorderBrush="WhiteSmoke"
+                    BorderThickness="1"
+                    Command="{Binding ClearLogsCommand}">
+                    Clear Logs
+                </Button>
+            </StackPanel>
+
+            <!--  Status  -->
+            <Border
+                Grid.Column="1"
+                Margin="10,0,0,0"
+                Padding="6"
+                BorderBrush="White"
+                BorderThickness="1"
+                CornerRadius="4">
+                <TextBlock
+                    Padding="5,0,5,0"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Text="{Binding ScanStatus}" />
+            </Border>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,202 @@
+<UserControl
+    x:Class="vengar.Views.PingView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:vengar.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:PingViewModel"
+    mc:Ignorable="d">
+
+    <Design.DataContext>
+        <vm:PingViewModel />
+    </Design.DataContext>
+
+    <Grid Background="{StaticResource PrimaryTopLayerBackground}" ColumnDefinitions="Auto, *">
+        <Border Grid.Column="0" Padding="20">
+            <StackPanel Spacing="10">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto" RowSpacing="11">
+                    <StackPanel Grid.Row="0" Spacing="5">
+                        <StackPanel>
+                            <TextBlock
+                                MinWidth="200"
+                                FontSize="13"
+                                Foreground="{StaticResource AccentButtonForeground}"
+                                Text="Address" />
+                            <TextBox
+                                Name="IpAddrField"
+                                Text="{Binding IpAddressField}"
+                                Watermark="IP or Hostname" />
+                        </StackPanel>
+                        <Grid
+                            Margin="0,5,0,0"
+                            ColumnDefinitions="*,*"
+                            RowDefinitions="*, *, *">
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="0,0,5,0">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{StaticResource AccentButtonForeground}"
+                                    Text="Timeout" />
+                                <TextBox
+                                    Name="TimeoutField"
+                                    Text="{Binding TimeoutField}"
+                                    Watermark="Timeout (in milliseconds)" />
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5,0,0,0">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{StaticResource AccentButtonForeground}"
+                                    Text="Buffer size" />
+                                <TextBox
+                                    Name="BufferSizeField"
+                                    Text="{Binding BufferSizeField}"
+                                    Watermark="Buffer size (in bytes)" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Spacing="6">
+                        <TextBlock
+                            FontSize="13"
+                            Foreground="{StaticResource AccentButtonForeground}"
+                            Text="Interval (ms)" />
+                        <TextBox Text="{Binding IntervalField}" Watermark="Ping interval in ms" />
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <Button
+                                Padding="10"
+                                Classes="ActionButton"
+                                Command="{Binding StartContinuousPingCommand}"
+                                Content="Start Continuous Ping"
+                                IsEnabled="{Binding IsNotContinuousPinging}" />
+
+                            <Button
+                                Padding="11"
+                                Background="{StaticResource Accent}"
+                                Command="{Binding StopContinuousPingCommand}"
+                                Content="Stop Continuous Ping"
+                                Foreground="Black"
+                                IsEnabled="{Binding IsContinuousPinging}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <Button
+                        Grid.Row="1"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Classes="ActionButton"
+                        Command="{Binding PingAddressCommand}"
+                        Content="Single Ping"
+                        IsDefault="True" />
+                    <Grid Grid.Row="2" ColumnDefinitions="*, *">
+                        <Button
+                            Grid.Column="0"
+                            Margin="0,0,5,0"
+                            HorizontalAlignment="Stretch"
+                            Classes="ActionButton"
+                            Command="{Binding PingSweepCommand}"
+                            Content="Ping Sweep"
+                            IsEnabled="{Binding IsNotSweeping}" />
+                        <Button
+                            Grid.Column="1"
+                            Padding="11"
+                            HorizontalAlignment="Stretch"
+                            Background="{StaticResource Accent}"
+                            Command="{Binding CancelSweepCommand}"
+                            Content="Cancel Sweep"
+                            Foreground="Black"
+                            IsEnabled="{Binding IsSweeping}" />
+                    </Grid>
+                    <StackPanel Grid.Row="4" VerticalAlignment="Stretch">
+                        <TextBlock
+                            Margin="0,0,0,3"
+                            FontSize="13"
+                            Text="Information" />
+                        <Border
+                            MaxWidth="600"
+                            BorderBrush="WhiteSmoke"
+                            BorderThickness="1">
+                            <TextBlock
+                                Padding="10"
+                                Text="{Binding PingReply}"
+                                TextWrapping="Wrap" />
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+        <Border Grid.Column="1" Padding="20,20,20,20">
+            <Grid Margin="10" RowDefinitions="*, Auto">
+                <dg:DataGrid
+                    x:Name="PingDataGrid"
+                    VerticalAlignment="Stretch"
+                    AutoGenerateColumns="False"
+                    BorderBrush="WhiteSmoke"
+                    BorderThickness="1"
+                    GridLinesVisibility="All"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding PreviousAddresses}"
+                    VerticalScrollBarVisibility="Auto">
+                    <dg:DataGrid.Columns>
+                        <dg:DataGridTextColumn Binding="{Binding Hostname}" Header="Host" />
+                        <dg:DataGridTextColumn Binding="{Binding Address}" Header="Address" />
+                        <dg:DataGridTextColumn Binding="{Binding Rtt}" Header="RTT (ms)" />
+                        <dg:DataGridTextColumn Binding="{Binding BufferSize}" Header="Buffer Size" />
+                        <dg:DataGridTextColumn Binding="{Binding Success}" Header="Success" />
+                        <dg:DataGridTextColumn Binding="{Binding Failure}" Header="Failure" />
+                    </dg:DataGrid.Columns>
+
+                    <dg:DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Click="CopyPingHost_OnClick" Header="Copy Host" />
+                            <MenuItem Click="CopyPingAddress_OnClick" Header="Copy Address" />
+                        </ContextMenu>
+                    </dg:DataGrid.ContextMenu>
+                </dg:DataGrid>
+
+                <Grid
+                    Grid.Row="1"
+                    Margin="0,10,0,0"
+                    VerticalAlignment="Bottom"
+                    ColumnDefinitions="Auto, *">
+                    <Button
+                        Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        Classes="ActionButton"
+                        Command="{Binding ClearLogTableCommand}"
+                        Content="Clear table" />
+                    <StackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Spacing="10">
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Classes="ActionButton"
+                            Command="{Binding SaveLogsCommand}"
+                            CommandParameter="{Binding $self}"
+                            Content="Save logs" />
+                        <Button
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Classes="ActionButton"
+                            Command="{Binding ClearLogFileCommand}"
+                            Content="Clear log file" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,181 @@
+<UserControl
+    x:Class="vengar.Views.IpToolsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+    xmlns:helpers="using:vengar.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:vengar.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:IpToolsViewModel"
+    mc:Ignorable="d">
+
+    <Design.DataContext>
+        <vm:IpToolsViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <helpers:BoolToPrivateColorConverter x:Key="PrivateColorConverter" />
+    </UserControl.Resources>
+
+
+    <Grid
+        Margin="10"
+        ColumnDefinitions="*, Auto"
+        RowDefinitions="Auto,Auto,Auto,Auto,*,Auto, Auto"
+        RowSpacing="10">
+
+        <!--  Input / Calculate  -->
+        <Grid
+            Grid.Column="0"
+            RowDefinitions="Auto, Auto, Auto"
+            RowSpacing="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBox
+                    Width="200"
+                    VerticalContentAlignment="Center"
+                    Text="{Binding Input}"
+                    Watermark="IP" />
+                <ComboBox
+                    Width="80"
+                    Height="40"
+                    ItemsSource="{Binding CidrOptions}"
+                    SelectedItem="{Binding SelectedCidr}" />
+                <Button
+                    Classes="ActionButton"
+                    Command="{Binding CalculateCommand}"
+                    Content="Calculate"
+                    IsDefault="True" />
+            </StackPanel>
+            <StackPanel
+                Grid.Row="1"
+                Orientation="Horizontal"
+                Spacing="5">
+                <Button
+                    Padding="10"
+                    BorderBrush="{StaticResource Accent}"
+                    BorderThickness="1"
+                    Command="{Binding DetectPrivateCommand}"
+                    Content="Check Private" />
+                <Border
+                    Padding="10"
+                    Background="{Binding CalculatedInfo.IsPrivate, Converter={StaticResource PrivateColorConverter}}"
+                    CornerRadius="5">
+                    <TextBlock Foreground="Black" Text="{Binding CalculatedInfo.IsPrivate, StringFormat='Private Network: {0}'}" />
+                </Border>
+            </StackPanel>
+            <StackPanel
+                Grid.Row="2"
+                Grid.Column="1"
+                Orientation="Horizontal"
+                Spacing="10">
+                <Button
+                    Padding="10"
+                    BorderBrush="{StaticResource Accent}"
+                    BorderThickness="1"
+                    Command="{Binding ResolvePtrCommand}"
+                    Content="Resolve PTR" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontStyle="Italic"
+                    Text="{Binding PtrResult}" />
+            </StackPanel>
+        </Grid>
+
+        <!--  CIDR / Network Range display  -->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Orientation="Horizontal"
+            Spacing="10">
+            <TextBlock FontWeight="Bold" Text="CIDR:" />
+            <TextBlock Text="{Binding CalculatedInfo.CidrNotation}" />
+            <TextBlock FontWeight="Bold" Text="Range:" />
+            <TextBlock Text="{Binding CalculatedInfo.Range}" />
+        </StackPanel>
+
+        <!--  Generate range inputs  -->
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="0"
+            Orientation="Horizontal"
+            Spacing="10">
+            <TextBox
+                Width="150"
+                Padding="10"
+                Text="{Binding StartIp}"
+                Watermark="Start IP" />
+            <TextBox
+                Width="150"
+                Padding="10"
+                Text="{Binding EndIp}"
+                Watermark="End IP" />
+            <Button
+                Classes="ActionButton"
+                Command="{Binding GenerateRangeCommand}"
+                Content="Generate" />
+        </StackPanel>
+
+        <!--  Generated IPs DataGrid  -->
+        <dg:DataGrid
+            Grid.Row="4"
+            Grid.Column="0"
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding Range}">
+            <dg:DataGrid.Columns>
+                <dg:DataGridTextColumn Binding="{Binding}" Header="IP Address" />
+            </dg:DataGrid.Columns>
+        </dg:DataGrid>
+
+        <!--  Status & Copy  -->
+        <StackPanel
+            Grid.Row="5"
+            Grid.Column="0"
+            Spacing="10">
+            <TextBlock
+                VerticalAlignment="Center"
+                FontStyle="Italic"
+                Foreground="Gray"
+                Text="{Binding StatusMessage}" />
+            <Button
+                Padding="10"
+                BorderBrush="{StaticResource Accent}"
+                BorderThickness="1"
+                Command="{Binding CopyRangeCommand}"
+                Content="Copy generated range" />
+        </StackPanel>
+
+
+        <Grid
+            Grid.Row="0"
+            Grid.Column="1"
+            ColumnDefinitions="Auto, Auto, Auto"
+            ColumnSpacing="25">
+            <StackPanel
+                Grid.Column="0"
+                Orientation="Vertical"
+                Spacing="5">
+                <TextBlock FontWeight="Bold" Text="Network Info" />
+                <TextBlock Text="{Binding CalculatedInfo.NetworkAddress, StringFormat='Network: {0}'}" />
+                <TextBlock Text="{Binding CalculatedInfo.BroadcastAddress, StringFormat='Broadcast: {0}'}" />
+                <TextBlock Text="{Binding CalculatedInfo.FirstHost, StringFormat='First Host: {0}'}" />
+                <TextBlock Text="{Binding CalculatedInfo.LastHost, StringFormat='Last Host: {0}'}" />
+                <TextBlock Text="{Binding CalculatedInfo.UsableHosts, StringFormat='Usable Hosts: {0}'}" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="1"
+                Orientation="Vertical"
+                Spacing="5">
+                <TextBlock FontWeight="Bold" Text="IP Representation" />
+                <TextBlock Text="{Binding CalculatedInfo.Binary, StringFormat='Binary: {0}'}" />
+                <TextBlock Text="{Binding CalculatedInfo.Hex, StringFormat='Hex: {0}'}" />
+            </StackPanel>
+
+        </Grid>
+
+
+    </Grid>
+</UserControl>
