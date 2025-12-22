@@ -1,4 +1,5 @@
 <img alt="logo-vengar" src="/docs/gh-logo.png" height="100" width="auto">
+
 # Vengar Network Utilities
 
 A cross platform network utilities application built with C# and Avalonia.
@@ -92,9 +93,9 @@ Stability and completeness are not yet guaranteed, but the project is evolving r
 
 ## Interface (screenshots)
 
-<img alt="" src="/docs/home.png" height="200" width="auto">
-<img alt="" src="/docs/ping.png" height="200" width="auto">
-<img alt="" src="/docs/portscanner.png" height="200" width="auto">
-<img alt="" src="/docs/dns.png" height="200" width="auto">
-<img alt="" src="/docs/ip.png" height="200" width="auto">
+<img alt="" src="/docs/home.png" height="300" width="auto">
+<img alt="" src="/docs/ping.png" height="300" width="auto">
+<img alt="" src="/docs/portscanner.png" height="300" width="auto">
+<img alt="" src="/docs/dns.png" height="300" width="auto">
+<img alt="" src="/docs/ip.png" height="300" width="auto">
 
