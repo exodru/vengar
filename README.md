@@ -1,6 +1,6 @@
 <img alt="logo-vengar" src="/docs/gh-logo.png" height="100" width="auto">
 
-# Vengar Network Utilities
+# Vengar | Network Utilities
 
 A cross platform network utilities application built with C# and Avalonia.
 The project focuses on providing practical networking tools with a clean UI, real time feedback, and exportable results.  
@@ -99,3 +99,10 @@ Stability and completeness are not yet guaranteed, but the project is evolving r
 <img alt="" src="/docs/dns.png" height="300" width="auto">
 <img alt="" src="/docs/ip.png" height="300" width="auto">
 
+---
+
+### License
+• [GNU Public License v3](https://choosealicense.com/licenses/gpl-3.0/)
+
+### Copyright
+Copyright © 2025, [DRU](https://github.com/exodru)
